@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جدول عشر ذي الحجة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple-deep: #3C3489;
+    --purple-mid: #534AB7;
+    --purple-light: #EEEDFE;
+    --purple-soft: #AFA9EC;
+    --gold: #EF9F27;
+    --gold-deep: #854F0B;
+    --gold-light: #FFF3CD;
+    --bg: #F0EEF9;
+    --white: #ffffff;
+    --gray: #888780;
+    --text: #2C2C2A;
+  }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── VIEWS ── */
+  .view { display: none; min-height: 100vh; }
+  .view.active { display: flex; flex-direction: column; }
+
+  /* ── LANDING ── */
+  #landing {
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: linear-gradient(160deg, #3C3489 0%, #534AB7 50%, #7F77DD 100%);
+  }
+
+  .landing-card {
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 24px 64px rgba(60,52,137,0.25);
+  }
+
+  .crescent { font-size: 56px; margin-bottom: 1rem; display: block; }
+
+  .landing-card h1 {
+    font-size: 22px; font-weight: 800;
+    color: var(--purple-deep);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .landing-card p {
+    font-size: 13px; color: var(--gray);
+    margin-bottom: 1.8rem;
+    line-height: 1.7;
+  }
+
+  .role-btns { display: flex; flex-direction: column; gap: 12px; }
+
+  .btn-student {
+    background: var(--purple-mid);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer;
+    transition: transform .15s, background .15s;
+  }
+  .btn-student:hover { background: var(--purple-deep); transform: translateY(-1px); }
+
+  .btn-teacher {
+    background: var(--gold-light);
+    color: var(--gold-deep);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 13px 20px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer;
+    transition: transform .15s;
+  }
+  .btn-teacher:hover { transform: translateY(-1px); }
+
+  /* ── NAME ENTRY ── */
+  #name-entry {
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: linear-gradient(160deg, #3C3489 0%, #534AB7 60%, #7F77DD 100%);
+  }
+
+  .name-card {
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .name-card h2 { font-size: 18px; font-weight: 700; color: var(--purple-deep); margin-bottom: 8px; }
+  .name-card p { font-size: 13px; color: var(--gray); margin-bottom: 1.5rem; }
+
+  .name-input {
+    width: 100%;
+    border: 2px solid var(--purple-soft);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px;
+    text-align: right;
+    outline: none;
+    margin-bottom: 1rem;
+    transition: border-color .2s;
+  }
+  .name-input:focus { border-color: var(--purple-mid); }
+
+  .btn-go {
+    width: 100%;
+    background: var(--purple-mid);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 13px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-go:hover { background: var(--purple-deep); }
+
+  /* ── STUDENT TRACKER ── */
+  #student-view { background: var(--bg); }
+
+  .header {
+    background: var(--purple-mid);
+    padding: 1.2rem 1.5rem 1rem;
+    color: white;
+  }
+
+  .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .header h2 { font-size: 16px; font-weight: 800; }
+  .student-name-badge {
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .gold-bar { height: 4px; background: var(--gold); border-radius: 2px; margin-top: 10px; }
+
+  .progress-strip {
+    background: var(--purple-deep);
+    padding: 10px 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .progress-bar-bg { flex: 1; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
+  .progress-bar-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width .4s ease; }
+  .progress-label { font-size: 12px; color: var(--purple-light); white-space: nowrap; }
+
+  .table-scroll { overflow-x: auto; padding: 1rem; }
+
+  table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 560px; }
+
+  thead th {
+    background: var(--purple-deep);
+    color: var(--purple-light);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  thead th:first-child { border-radius: 10px 0 0 0; text-align: right; padding-right: 14px; }
+  thead th:last-child { border-radius: 0 10px 0 0; }
+
+  tbody tr { cursor: default; }
+
+  .row-normal td { background: white; }
+  .row-normal:nth-child(even) td { background: var(--purple-light); }
+  .row-special td { background: var(--gold-light) !important; }
+
+  td {
+    padding: 10px 6px;
+    border-bottom: 1px solid #E8E5F5;
+    text-align: center;
+    font-size: 13px;
+  }
+  td:first-child {
+    text-align: right;
+    padding-right: 14px;
+    font-weight: 500;
+    color: var(--purple-deep);
+    min-width: 110px;
+  }
+  .row-special td:first-child { color: var(--gold-deep); font-weight: 700; }
+
+  .check-btn {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    border: 2px solid var(--purple-soft);
+    background: white;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all .15s;
+    user-select: none;
+  }
+  .check-btn:hover { border-color: var(--purple-mid); transform: scale(1.1); }
+  .check-btn.checked {
+    background: var(--purple-mid);
+    border-color: var(--purple-mid);
+    color: white;
+  }
+  .row-special .check-btn { border-color: var(--gold); }
+  .row-special .check-btn.checked { background: var(--gold); border-color: var(--gold); }
+
+  .day-label { display: flex; align-items: center; gap: 6px; }
+  .day-badge { font-size: 10px; background: var(--gold); color: white; border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+
+  .share-section {
+    padding: 1rem 1.5rem 1.5rem;
+    text-align: center;
+  }
+  .share-section p { font-size: 13px; color: var(--gray); margin-bottom: 10px; }
+  .code-display {
+    background: var(--purple-deep);
+    color: var(--purple-light);
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 6px;
+    margin-bottom: 10px;
+    font-family: monospace;
+  }
+  .btn-copy {
+    background: var(--gold);
+    color: var(--gold-deep);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 24px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-copy:hover { background: #d4891f; }
+  .copied-msg { font-size: 12px; color: var(--purple-mid); margin-top: 6px; height: 16px; }
+
+  /* ── TEACHER VIEW ── */
+  #teacher-view { background: var(--bg); }
+
+  .teacher-header {
+    background: var(--gold-deep);
+    padding: 1.2rem 1.5rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .teacher-header h2 { font-size: 16px; font-weight: 800; flex: 1; }
+  .btn-back {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 6px 14px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .lookup-section {
+    padding: 1.5rem;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .lookup-section h3 { font-size: 15px; color: var(--purple-deep); margin-bottom: 12px; text-align: center; }
+
+  .code-input {
+    width: 100%;
+    border: 2px solid var(--purple-soft);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 4px;
+    font-weight: 700;
+    outline: none;
+    margin-bottom: 10px;
+  }
+  .code-input:focus { border-color: var(--purple-mid); }
+
+  .btn-lookup {
+    width: 100%;
+    background: var(--purple-mid);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 13px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 6px;
+  }
+  .lookup-error { color: #E24B4A; font-size: 13px; text-align: center; min-height: 20px; }
+
+  .result-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border: 2px solid var(--purple-soft);
+  }
+
+  .result-name { font-size: 18px; font-weight: 800; color: var(--purple-deep); margin-bottom: 4px; }
+  .result-date { font-size: 12px; color: var(--gray); margin-bottom: 1rem; }
+
+  .result-summary {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .summary-pill {
+    background: var(--purple-light);
+    color: var(--purple-deep);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .summary-pill.gold { background: var(--gold-light); color: var(--gold-deep); }
+
+  .result-grid { display: flex; flex-direction: column; gap: 8px; }
+  .result-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--bg);
+  }
+  .result-row.special-row { background: var(--gold-light); }
+  .result-day { font-size: 12px; font-weight: 700; color: var(--purple-deep); min-width: 90px; }
+  .result-row.special-row .result-day { color: var(--gold-deep); }
+  .result-checks { display: flex; gap: 4px; flex-wrap: wrap; }
+  .result-dot {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+  .result-dot.done { background: var(--purple-mid); color: white; }
+  .result-dot.miss { background: #F0EEF9; border: 1px solid var(--purple-soft); }
+  .result-row.special-row .result-dot.done { background: var(--gold); }
+
+  .no-data { text-align: center; padding: 2rem; color: var(--gray); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing" class="view active">
+  <div class="landing-card">
+    <span class="crescent">🌙</span>
+    <h1>جدول عشر ذي الحجة</h1>
+    <p>سجّل أعمالك الصالحة كل يوم<br>وشارك نتيجتك مع معلمك</p>
+    <div class="role-btns">
+      <button class="btn-student" onclick="showView('name-entry')">أنا طالب — ابدأ التتبع</button>
+      <button class="btn-teacher" onclick="showView('teacher-view')">أنا معلم — شوف نتائج الطلاب</button>
+    </div>
+  </div>
+</div>
+
+<!-- NAME ENTRY -->
+<div id="name-entry" class="view">
+  <div style="background:linear-gradient(160deg,#3C3489,#534AB7,#7F77DD);flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;">
+    <div class="name-card">
+      <div style="font-size:40px;margin-bottom:12px;">📖</div>
+      <h2>اكتب اسمك</h2>
+      <p>هيظهر في جدولك وعند المعلم</p>
+      <input class="name-input" id="student-name-input" type="text" placeholder="مثال: محمد أحمد" />
+      <button class="btn-go" onclick="startTracker()">ابدأ ✨</button>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT TRACKER -->
+<div id="student-view" class="view">
+  <div class="header">
+    <div class="header-top">
+      <h2>جدول عشر ذي الحجة</h2>
+      <div class="student-name-badge" id="student-name-display">—</div>
+    </div>
+    <div class="gold-bar"></div>
+  </div>
+  <div class="progress-strip">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="progress-label">0 / 80</div>
+  </div>
+
+  <div class="table-scroll">
+    <table id="tracker-table">
+      <thead>
+        <tr>
+          <th>اليوم</th>
+          <th>الصلاة</th>
+          <th>القرآن</th>
+          <th>الذكر</th>
+          <th>الصيام</th>
+          <th>الوالدين</th>
+          <th>الصدقة</th>
+          <th>الدعاء</th>
+          <th>عمل صالح</th>
+        </tr>
+      </thead>
+      <tbody id="tracker-body"></tbody>
+    </table>
+  </div>
+
+  <div class="share-section">
+    <p>📤 شارك هذا الكود مع معلمك عشان يشوف تقدمك</p>
+    <div class="code-display" id="share-code">——</div>
+    <button class="btn-copy" onclick="copyCode()">نسخ الكود</button>
+    <div class="copied-msg" id="copied-msg"></div>
+  </div>
+</div>
+
+<!-- TEACHER VIEW -->
+<div id="teacher-view" class="view">
+  <div class="teacher-header">
+    <button class="btn-back" onclick="showView('landing')">← رجوع</button>
+    <h2>لوحة المعلم</h2>
+    <span>👨‍🏫</span>
+  </div>
+
+  <div class="lookup-section">
+    <h3>أدخل كود الطالب لمشاهدة نتيجته</h3>
+    <input class="code-input" id="code-input" type="text" placeholder="XXXX" maxlength="6" oninput="this.value=this.value.toUpperCase()" />
+    <button class="btn-lookup" onclick="lookupStudent()">عرض النتيجة</button>
+    <div class="lookup-error" id="lookup-error"></div>
+    <div id="result-area"></div>
+
+    <div style="margin-top:2rem;border-top:1px solid #E8E5F5;padding-top:1.5rem;">
+      <h3 style="margin-bottom:1rem;">كل الطلاب المسجّلين</h3>
+      <div id="all-students"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS = [
+  { label: 'ذو الحجة ١', special: false },
+  { label: 'ذو الحجة ٢', special: false },
+  { label: 'ذو الحجة ٣', special: false },
+  { label: 'ذو الحجة ٤', special: false },
+  { label: 'ذو الحجة ٥', special: false },
+  { label: 'ذو الحجة ٦', special: false },
+  { label: 'ذو الحجة ٧', special: false },
+  { label: 'ذو الحجة ٨', special: false },
+  { label: 'يوم عرفة ⭐', special: true },
+  { label: 'عيد الأضحى', special: false },
+];
+const COLS = 8;
+const TOTAL = DAYS.length * COLS;
+
+let currentCode = null;
+
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'teacher-view') renderAllStudents();
+}
+
+function generateCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  return Array.from({length: 4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+}
+
+function getStorage() {
+  try { return JSON.parse(localStorage.getItem('dhulhijja_v2') || '{}'); } catch { return {}; }
+}
+function setStorage(data) {
+  try { localStorage.setItem('dhulhijja_v2', JSON.stringify(data)); } catch {}
+}
+
+function startTracker() {
+  const name = document.getElementById('student-name-input').value.trim();
+  if (!name) { alert('من فضلك اكتب اسمك'); return; }
+
+  const storage = getStorage();
+  let code = Object.keys(storage).find(k => storage[k].name === name);
+  if (!code) {
+    code = generateCode();
+    while (storage[code]) code = generateCode();
+    storage[code] = {
+      name,
+      data: Array.from({length: 10}, () => Array(COLS).fill(false)),
+      updated: new Date().toISOString()
+    };
+    setStorage(storage);
+  }
+
+  currentCode = code;
+  document.getElementById('student-name-display').textContent = name;
+  document.getElementById('share-code').textContent = code;
+  buildTable(code);
+  showView('student-view');
+}
+
+function buildTable(code) {
+  const storage = getStorage();
+  const record = storage[code];
+  const tbody = document.getElementById('tracker-body');
+  tbody.innerHTML = '';
+
+  DAYS.forEach((day, r) => {
+    const tr = document.createElement('tr');
+    tr.className = day.special ? 'row-special' : 'row-normal';
+
+    const tdDay = document.createElement('td');
+    tdDay.innerHTML = day.label;
+    tr.appendChild(tdDay);
+
+    for (let c = 0; c < COLS; c++) {
+      const td = document.createElement('td');
+      const btn = document.createElement('div');
+      btn.className = 'check-btn' + (record.data[r][c] ? ' checked' : '');
+      btn.textContent = record.data[r][c] ? '✓' : '';
+      btn.addEventListener('click', () => {
+        const s = getStorage();
+        s[code].data[r][c] = !s[code].data[r][c];
+        s[code].updated = new Date().toISOString();
+        setStorage(s);
+        btn.classList.toggle('checked', s[code].data[r][c]);
+        btn.textContent = s[code].data[r][c] ? '✓' : '';
+        updateProgress(code);
+      });
+      td.appendChild(btn);
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  });
+  updateProgress(code);
+}
+
+function updateProgress(code) {
+  const s = getStorage();
+  const record = s[code];
+  const done = record.data.flat().filter(Boolean).length;
+  const pct = Math.round((done / TOTAL) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = done + ' / ' + TOTAL;
+}
+
+function copyCode() {
+  const code = document.getElementById('share-code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const msg = document.getElementById('copied-msg');
+    msg.textContent = '✓ تم نسخ الكود!';
+    setTimeout(() => msg.textContent = '', 2000);
+  });
+}
+
+function lookupStudent() {
+  const code = document.getElementById('code-input').value.trim().toUpperCase();
+  const errEl = document.getElementById('lookup-error');
+  const resultArea = document.getElementById('result-area');
+  errEl.textContent = '';
+  resultArea.innerHTML = '';
+
+  if (!code) { errEl.textContent = 'من فضلك أدخل الكود'; return; }
+  const s = getStorage();
+  const record = s[code];
+  if (!record) { errEl.textContent = '❌ الكود غير موجود — تأكد من الطالب'; return; }
+
+  renderStudentResult(record, code, resultArea);
+}
+
+function renderStudentResult(record, code, container) {
+  const done = record.data.flat().filter(Boolean).length;
+  const pct = Math.round((done / TOTAL) * 100);
+  const updated = record.updated ? new Date(record.updated).toLocaleDateString('ar-EG') : '—';
+
+  const card = document.createElement('div');
+  card.className = 'result-card';
+  card.innerHTML = `
+    <div class="result-name">${record.name}</div>
+    <div class="result-date">آخر تحديث: ${updated} | الكود: ${code}</div>
+    <div class="result-summary">
+      <div class="summary-pill">${done} / ${TOTAL} عمل ✓</div>
+      <div class="summary-pill gold">${pct}% إنجاز</div>
+    </div>
+    <div class="result-grid">${DAYS.map((day, r) => `
+      <div class="result-row ${day.special ? 'special-row' : ''}">
+        <div class="result-day">${day.label}</div>
+        <div class="result-checks">
+          ${record.data[r].map(v => `<div class="result-dot ${v ? 'done' : 'miss'}">${v ? '✓' : ''}</div>`).join('')}
+        </div>
+      </div>
+    `).join('')}</div>
+  `;
+  container.appendChild(card);
+}
+
+function renderAllStudents() {
+  const container = document.getElementById('all-students');
+  container.innerHTML = '';
+  const s = getStorage();
+  const keys = Object.keys(s);
+  if (!keys.length) {
+    container.innerHTML = '<div class="no-data">لا يوجد طلاب مسجلين بعد</div>';
+    return;
+  }
+  keys.forEach(code => {
+    const record = s[code];
+    const done = record.data.flat().filter(Boolean).length;
+    const pct = Math.round((done / TOTAL) * 100);
+    const row = document.createElement('div');
+    row.style.cssText = 'background:white;border-radius:12px;padding:12px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer;border:1px solid #E8E5F5;';
+    row.innerHTML = `
+      <div style="flex:1;">
+        <div style="font-weight:700;color:#3C3489;font-size:14px;">${record.name}</div>
+        <div style="font-size:11px;color:#888;">${done}/${TOTAL} عمل — كود: ${code}</div>
+      </div>
+      <div style="font-size:16px;font-weight:800;color:${pct>=80?'#0F6E56':pct>=50?'#534AB7':'#888'};">${pct}%</div>
+    `;
+    row.onclick = () => {
+      document.getElementById('code-input').value = code;
+      lookupStudent();
+      window.scrollTo(0, 200);
+    };
+    container.appendChild(row);
+  });
+}
+</script>
+</body>
+</html>
