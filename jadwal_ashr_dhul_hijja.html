@@ -1,0 +1,106 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+  .jadwal { font-family: 'Tajawal', sans-serif; direction: rtl; padding: 1rem 0; }
+  .jadwal-title { text-align: center; font-size: 22px; font-weight: 700; color: var(--color-text-primary); margin-bottom: 4px; }
+  .jadwal-sub { text-align: center; font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.2rem; }
+  .table-wrap { overflow-x: auto; border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); }
+  table { width: 100%; border-collapse: collapse; min-width: 580px; }
+  thead tr { background: #534AB7; }
+  thead th { color: #EEEDFE; font-size: 12px; font-weight: 500; padding: 10px 6px; text-align: center; border-left: 0.5px solid #7F77DD; }
+  thead th:last-child { border-left: none; }
+  thead th.day-col { background: #3C3489; color: #CECBF6; min-width: 72px; }
+  tbody tr:nth-child(odd) { background: #EEEDFE; }
+  tbody tr:nth-child(even) { background: #ffffff; }
+  .day-cell { font-size: 13px; font-weight: 500; color: #3C3489; padding: 10px 8px; text-align: center; border-left: 0.5px solid #AFA9EC; white-space: nowrap; }
+  .check-cell { padding: 8px 4px; text-align: center; border-left: 0.5px solid #D3D1C7; }
+  .check-cell:last-child { border-left: none; }
+  .box { width: 24px; height: 24px; border-radius: 6px; border: 1.5px solid #AFA9EC; background: #fff; display: inline-block; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .box.done { background: #534AB7; border-color: #534AB7; position: relative; }
+  .box.done::after { content: '✓'; color: #EEEDFE; font-size: 14px; line-height: 24px; display: block; text-align: center; }
+  .special { background: #FFF8E1 !important; }
+  .special .day-cell { color: #854F0B; }
+  .special .box { border-color: #EF9F27; }
+  .special .box.done { background: #EF9F27; border-color: #EF9F27; }
+  .footer { text-align: center; margin-top: 1rem; font-size: 12px; color: var(--color-text-secondary); }
+  .legend { display: flex; gap: 16px; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-text-secondary); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+</style>
+
+<div class="jadwal">
+  <div class="jadwal-title">جدول أعمالي في عشر ذي الحجة</div>
+  <div class="jadwal-sub">ضع ✓ في كل عمل تؤديه يومياً — اجعل العشر لا تُنسى</div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#534AB7;"></div> أيام عادية</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#EF9F27;"></div> يوم عرفة (اليوم التاسع)</div>
+  </div>
+
+  <div class="table-wrap">
+    <table id="jadwal-table">
+      <thead>
+        <tr>
+          <th class="day-col">اليوم</th>
+          <th>الصلاة على وقتها</th>
+          <th>تلاوة القرآن</th>
+          <th>ذكر الله</th>
+          <th>الصيام</th>
+          <th>بر الوالدين</th>
+          <th>الصدقة</th>
+          <th>الدعاء</th>
+          <th>عمل صالح</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="footer">من مدونة رياض الجنة • بتصميم محسّن</div>
+</div>
+
+<script>
+const days = [
+  { label: 'ذو الحجة ١', special: false },
+  { label: 'ذو الحجة ٢', special: false },
+  { label: 'ذو الحجة ٣', special: false },
+  { label: 'ذو الحجة ٤', special: false },
+  { label: 'ذو الحجة ٥', special: false },
+  { label: 'ذو الحجة ٦', special: false },
+  { label: 'ذو الحجة ٧', special: false },
+  { label: 'ذو الحجة ٨', special: false },
+  { label: 'ذو الحجة ٩ ⭐ يوم عرفة', special: true },
+  { label: 'ذو الحجة ١٠ 🎉 العيد', special: false },
+];
+
+const cols = 8;
+const state = JSON.parse(localStorage.getItem('jadwal_hijja') || 'null') || Array.from({length: 10}, () => Array(cols).fill(false));
+
+const tbody = document.getElementById('tbody');
+
+days.forEach((day, r) => {
+  const tr = document.createElement('tr');
+  if (day.special) tr.classList.add('special');
+
+  const td0 = document.createElement('td');
+  td0.className = 'day-cell';
+  td0.textContent = day.label;
+  tr.appendChild(td0);
+
+  for (let c = 0; c < cols; c++) {
+    const td = document.createElement('td');
+    td.className = 'check-cell';
+    const box = document.createElement('div');
+    box.className = 'box' + (state[r][c] ? ' done' : '');
+    box.addEventListener('click', () => {
+      state[r][c] = !state[r][c];
+      box.classList.toggle('done', state[r][c]);
+      try { localStorage.setItem('jadwal_hijja', JSON.stringify(state)); } catch(e) {}
+    });
+    td.appendChild(box);
+    tr.appendChild(td);
+  }
+
+  tbody.appendChild(tr);
+});
+</script>
